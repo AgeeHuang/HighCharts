@@ -1,0 +1,2 @@
+Manifest-Version: 1.0
+Logging-Profile: ez-rest-reportform-server-profile

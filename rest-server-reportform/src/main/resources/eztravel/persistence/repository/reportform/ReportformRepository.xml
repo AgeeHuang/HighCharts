@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="eztravel.persistence.repository.reportform.ReportformRepository">
+
+	<select id="getSomething" parameterType="map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM DUAL
+	</select>
+	
+	<select id="getMonthRevenue" resultType="eztravel.rest.pojo.reportform.RevenueInfo" parameterType="map">
+		select SUBSTR(a.order_dt,1,6) as order_Dt ,b.code_name,count(1) as ord_Cnt,sum(amt) as ord_Amt from tblcode_detail b , tblord_prod a 
+		where 1 = 1
+		and b.code_id = a.line_cd 
+		and b.item_id = 'B40' 
+		and b.code_name = #{region,jdbcType=VARCHAR} 
+		and a.order_dt like #{date,jdbcType=VARCHAR}||'%'
+		and a.country_cd = '1' 
+		and a.prod_type = 'GRP'
+		and a.prod_status = 'RR' 
+		and exists (select 1 from tblord_main m where m.order_no = a.order_no and m.order_type = '02' and m.dealer_no not like 'AGN%' )
+		group by b.code_name,SUBSTR(a.order_dt,1,6) 
+	</select>
+	
+	<select id="getRevenue" resultType="eztravel.rest.pojo.reportform.RevenueInfo" parameterType="map">
+		select a.order_dt,b.code_name,count(1) as ord_Cnt,sum(amt) as ord_Amt from tblcode_detail b , tblord_prod a 
+		where 1 = 1
+		and b.code_id = a.line_cd 
+		and b.item_id = 'B40' 
+		and b.code_name = #{region,jdbcType=VARCHAR}  
+		and a.order_dt like #{date,jdbcType=VARCHAR}||'%'
+		and a.country_cd = '1' 
+		and a.prod_type = 'GRP'
+		and a.prod_status = 'RR' 
+		and exists (select 1 from tblord_main m where m.order_no = a.order_no and m.order_type = '02' and m.dealer_no not like 'AGN%' )
+		group by b.code_name,a.order_dt;
+	</select>
+
+</mapper>
