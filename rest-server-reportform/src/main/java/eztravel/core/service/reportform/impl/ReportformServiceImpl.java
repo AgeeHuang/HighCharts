@@ -22,10 +22,13 @@
 package eztravel.core.service.reportform.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import eztravel.core.service.reportform.ReportformService;
 import eztravel.persistence.repository.reportform.ReportformRepository;
+import eztravel.rest.pojo.reportform.RevenueGroup;
 import eztravel.rest.pojo.reportform.RevenueInfo;
 
 
@@ -124,14 +128,90 @@ public class ReportformServiceImpl implements ReportformService {
   public List<Map<String, Object>> getRevenue(String date, String region) {
     List<RevenueInfo> revenueInfo = reportformRepository.getRevenue(date,region);
     
+    
+    Map<String,String> dy_count=null ,dy_amount= null;
+    List<String> hasDays=new ArrayList<String>();
+    
+    List<RevenueGroup> groups= new ArrayList<RevenueGroup>();
+    
+    String g_date=null;
+    
+      
     for(RevenueInfo revenueinfo : revenueInfo ){
+  
+      //日期字串切割成年月比較
+      if (!revenueinfo.getOrder_Dt().substring(0, 6).equals(g_date)) {
+        g_date = revenueinfo.getOrder_Dt().substring(0, 6);
+        
+        RevenueGroup group=new RevenueGroup();
+        groups.add(group);
+        dy_count = new TreeMap<String,String>();
+        dy_amount = new TreeMap<String,String>();
+        
+        group.setDaily_cnt(dy_count);
+        group.setDaily_amt(dy_amount);
+        group.setG_date(revenueinfo.getOrder_Dt().substring(0, 6));
+        
+      }
+     
+        //先把有訂單跟金額的日期存起來
+        hasDays.add(revenueinfo.getOrder_Dt());
+          
       
-      List<String> listay =new ArrayList<String>();
-      
+        dy_count.put(revenueinfo.getOrder_Dt().substring(6, 8),revenueinfo.getOrd_Cnt());
+        dy_amount.put(revenueinfo.getOrder_Dt().substring(6, 8),revenueinfo.getOrd_Amt());
       
     }
     
-    return null;
+    //the month all days
+    List<String> monthdays=CalendarDay(date.substring(0,4),date.substring(4,6));
+    
+    for(String day: monthdays){
+      if(!hasDays.contains(day)){
+        dy_count.put(day.substring(6, 8),"0");
+        dy_amount.put(day.substring(6, 8),"0");
+      }
+    }
+    
+    
+    Map<String, Object> result = new TreeMap<String, Object>();
+    
+    for(RevenueGroup group :groups){
+      result.put(group.getG_date()+"金額", group.getDaily_amt());
+      result.put(group.getG_date()+"訂單", group.getDaily_cnt());
+      result.put("local", date+"-"+region);
+    }
+    List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+    
+    list.add(result);
+    
+   
+    return list;
+  }
+  
+  //get the year month all day
+  public List<String> CalendarDay(String year , String month){
+    
+    int ann=Integer.valueOf(year);   //年
+    int mois=Integer.valueOf(month); //月
+    
+    int remois = mois - 1;
+    Calendar cal = new GregorianCalendar(ann,remois,1);  
+    int day = cal. getActualMaximum(Calendar.DATE); //取得當月最大天數
+    int day_of_month = cal.get(Calendar.DAY_OF_MONTH);//當月的第一天
+    
+    List<String> listday= new ArrayList<String>();
+    
+    for(day_of_month = 1 ; day_of_month <= day ; day_of_month++){//此for迴圈是要將日期印出來
+        if(day_of_month<10){  //若那一天是個位數的印法
+        listday.add(year+month+"0"+day_of_month);
+        //System.out.println(year+month+"0"+day_of_month);
+        }else{  //十位數的印法
+       // System.out.println(year+month+day_of_month);
+        listday.add(year+month+day_of_month);
+        }                 
+    }   
+    return listday; 
   }
   
 }

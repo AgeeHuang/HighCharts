@@ -31,7 +31,7 @@
 		and a.prod_type = 'GRP'
 		and a.prod_status = 'RR' 
 		and exists (select 1 from tblord_main m where m.order_no = a.order_no and m.order_type = '02' and m.dealer_no not like 'AGN%' )
-		group by b.code_name,a.order_dt;
+		group by b.code_name,a.order_dt
 	</select>
 
 </mapper>

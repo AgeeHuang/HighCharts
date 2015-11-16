@@ -105,5 +105,25 @@ public class ReportformController {
 
     return new ResponseEntity<RestResource<List<Map<String, Object>>>>(body, HttpStatus.OK);
   }
+  
+  @RequestMapping(value = "/revenue", method = RequestMethod.GET)
+  public ResponseEntity<RestResource<List<Map<String, Object>>>> getRevenueInfo(@RequestParam String date  , @RequestParam String region) {
+    RestResource<List<Map<String, Object>>> body = RestResourceFactory.newInstance();
+    
+    try {
+      List<List<Map<String, Object>>> result = new ArrayList<List<Map<String, Object>>>();
+      List<Map<String, Object>> revenueInfo = reportformService.getRevenue(date,region);
+      
+      result.add(revenueInfo);
+      
+      body.setItems(result);
+      
+    }catch (Exception e) {
+      throw new RestException(e.getMessage(), body);
+    }
+    
+
+    return new ResponseEntity<RestResource<List<Map<String, Object>>>>(body, HttpStatus.OK);
+  }
    
 }
