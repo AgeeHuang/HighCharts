@@ -44,6 +44,6 @@ public interface ReportformService {
  
   public List<Map<String, Object>> getMonthRevenue(String date ,String region);
   
-  public List<Map<String, Object>> getRevenue(String date ,String region);
+  public List<Map<String, Object>> getRevenue(String date);
   
 }

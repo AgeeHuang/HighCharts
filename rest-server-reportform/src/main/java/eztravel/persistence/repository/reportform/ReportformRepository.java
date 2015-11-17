@@ -49,6 +49,6 @@ public interface ReportformRepository {
   
   public List<RevenueInfo> getMonthRevenue(@Param("date")String date , @Param("region")String region);
   
-  public List<RevenueInfo> getRevenue(@Param("date")String date , @Param("region")String region);
+  public List<RevenueInfo> getRevenue(@Param("date")String date);
   
 }

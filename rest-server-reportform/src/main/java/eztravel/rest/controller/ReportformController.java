@@ -107,12 +107,12 @@ public class ReportformController {
   }
   
   @RequestMapping(value = "/revenue", method = RequestMethod.GET)
-  public ResponseEntity<RestResource<List<Map<String, Object>>>> getRevenueInfo(@RequestParam String date  , @RequestParam String region) {
+  public ResponseEntity<RestResource<List<Map<String, Object>>>> getRevenueInfo(@RequestParam String date) {
     RestResource<List<Map<String, Object>>> body = RestResourceFactory.newInstance();
     
     try {
       List<List<Map<String, Object>>> result = new ArrayList<List<Map<String, Object>>>();
-      List<Map<String, Object>> revenueInfo = reportformService.getRevenue(date,region);
+      List<Map<String, Object>> revenueInfo = reportformService.getRevenue(date);
       
       result.add(revenueInfo);
       

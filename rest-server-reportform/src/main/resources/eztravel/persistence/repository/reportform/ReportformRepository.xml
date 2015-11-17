@@ -25,7 +25,6 @@
 		where 1 = 1
 		and b.code_id = a.line_cd 
 		and b.item_id = 'B40' 
-		and b.code_name = #{region,jdbcType=VARCHAR}  
 		and a.order_dt like #{date,jdbcType=VARCHAR}||'%'
 		and a.country_cd = '1' 
 		and a.prod_type = 'GRP'

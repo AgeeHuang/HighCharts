@@ -14,6 +14,9 @@ public class RevenueGroup implements Serializable{
   /** The group date. */
   private String g_date;
   
+  /** The region name. */
+  private String code_name;
+  
   /** daily_cnt list */
   private Map<String,String> daily_cnt;
   
@@ -26,6 +29,14 @@ public class RevenueGroup implements Serializable{
 
   public void setG_date(String g_date) {
     this.g_date = g_date;
+  }
+  
+  public String getCode_name() {
+    return code_name;
+  }
+
+  public void setCode_name(String code_name) {
+    this.code_name = code_name;
   }
 
   public Map<String,String> getDaily_cnt() {
