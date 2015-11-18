@@ -32,5 +32,19 @@
 		and exists (select 1 from tblord_main m where m.order_no = a.order_no and m.order_type = '02' and m.dealer_no not like 'AGN%' )
 		group by b.code_name,a.order_dt
 	</select>
+	
+	<select id="getYearRevenue" resultType="eztravel.rest.pojo.reportform.RevenueInfo" parameterType="map">
+		select SUBSTR(a.order_dt,1,4)as order_Dt , b.code_name,count(1) as ord_Cnt,sum(amt) as ord_Amt from tblcode_detail b , tblord_prod a 
+		where 1 = 1
+		and b.code_id = a.line_cd 
+		and b.item_id = 'B40' 
+		and b.code_name not in('東台灣(H)')
+		and a.order_dt like #{date,jdbcType=VARCHAR}||'%' 
+		and a.country_cd = '1' 
+		and a.prod_type = 'GRP'
+		and a.prod_status = 'RR' 
+		and exists (select 1 from tblord_main m where m.order_no = a.order_no and m.order_type = '02' and m.dealer_no not like 'AGN%' )
+		group by b.code_name ,SUBSTR(a.order_dt,1,4)
+	</select>
 
 </mapper>

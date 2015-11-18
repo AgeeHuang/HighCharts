@@ -112,7 +112,29 @@ public class ReportformController {
     
     try {
       List<List<Map<String, Object>>> result = new ArrayList<List<Map<String, Object>>>();
-      List<Map<String, Object>> revenueInfo = reportformService.getRevenue(date);
+      
+      if(date.length()==6){
+      List<Map<String, Object>> revenueInfo = reportformService.getRevenue(date); 
+      result.add(revenueInfo);
+      }
+      
+      body.setItems(result);
+      
+    }catch (Exception e) {
+      throw new RestException(e.getMessage(), body);
+    }
+    
+
+    return new ResponseEntity<RestResource<List<Map<String, Object>>>>(body, HttpStatus.OK);
+  }
+  
+  @RequestMapping(value = "/yearrevenue", method = RequestMethod.GET)
+  public ResponseEntity<RestResource<List<Map<String, Object>>>> getyearRevenueInfo(@RequestParam String date) {
+    RestResource<List<Map<String, Object>>> body = RestResourceFactory.newInstance();
+    
+    try {
+      List<List<Map<String, Object>>> result = new ArrayList<List<Map<String, Object>>>();
+      List<Map<String, Object>> revenueInfo = reportformService.getYearRevenue(date);
       
       result.add(revenueInfo);
       

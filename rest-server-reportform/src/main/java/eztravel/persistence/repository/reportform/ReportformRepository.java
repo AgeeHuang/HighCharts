@@ -51,4 +51,6 @@ public interface ReportformRepository {
   
   public List<RevenueInfo> getRevenue(@Param("date")String date);
   
+  public List<RevenueInfo> getYearRevenue(@Param("date")String date);
+  
 }

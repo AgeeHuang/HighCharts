@@ -274,5 +274,31 @@ public class ReportformServiceImpl implements ReportformService {
     }   
     return listday; 
   }
+
+  
+  @Override
+  public List<Map<String, Object>> getYearRevenue(String date) {
+    
+   List<RevenueInfo> revenueInfo = reportformRepository.getYearRevenue(date);
+   
+   List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+   
+   if(revenueInfo==null || revenueInfo.size()==0){
+     return list;
+   }
+   
+  
+   for(RevenueInfo revenueinfo : revenueInfo ){
+     Map<String, Object> result = new LinkedHashMap<String, Object>();
+     result.put(revenueinfo.getOrder_Dt()+"訂單",revenueinfo.getOrd_Cnt());
+     result.put(revenueinfo.getOrder_Dt()+"金額", revenueinfo.getOrd_Amt());  
+     result.put("local", date+"-"+revenueinfo.getCode_name());
+     
+     list.add(result);
+     
+   }  
+    
+    return list;
+  }
   
 }
